@@ -89,7 +89,7 @@ pushing and adding to heap
 print location
 heap = []
 testNode = Node(7,(startX,startY))
-testNode2 = Node(5,(5,5))
+testNode2 = Node(9,(5,5))
 heapq.heappush(heap,testNode)
 heapq.heappush(heap,testNode2)
 #heapq.heapify(heap)
