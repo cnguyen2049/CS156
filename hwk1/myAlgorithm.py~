@@ -1,4 +1,4 @@
-
+#Shunt
 import sys
 import heapq
 
@@ -66,11 +66,22 @@ Beginning to implement A star algorithm
 def astar (node,start,goal): #start and goal will be coordinates
 	frontier = []
 	frontier.put(start,0);
-	openList = []
 	closedList = []
 	accumulated_cost = []
 	openList = None
-	accumulated_cost = []
+	if(accumulated_cost + currentFuelCost > OurTotalFuel)
+	{
+		return false;
+	}
+	else if (node.type == airport)
+	{
+		return true;
+	}
+	if(nodeToGrab is in closedList)
+	{
+		#IGNORE THIS NODE
+	}
+	
 	
 
 
@@ -89,7 +100,7 @@ pushing and adding to heap
 print location
 heap = []
 testNode = Node(7,(startX,startY))
-testNode2 = Node(9,(5,5))
+testNode2 = Node(5,(5,5))
 heapq.heappush(heap,testNode)
 heapq.heappush(heap,testNode2)
 #heapq.heapify(heap)
