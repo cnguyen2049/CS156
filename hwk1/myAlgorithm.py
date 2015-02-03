@@ -66,11 +66,22 @@ Beginning to implement A star algorithm
 def astar (node,start,goal): #start and goal will be coordinates
 	frontier = []
 	frontier.put(start,0);
-	openList = []
 	closedList = []
 	accumulated_cost = []
 	openList = None
-	accumulated_cost = []
+	if(accumulated_cost + currentFuelCost > OurTotalFuel)
+	{
+		return false;
+	}
+	else if (node.type == airport)
+	{
+		return true;
+	}
+	if(nodeToGrab is in closedList)
+	{
+		#IGNORE THIS NODE
+	}
+	
 	
 
 
