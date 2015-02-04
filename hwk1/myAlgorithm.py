@@ -89,6 +89,7 @@ def manhattan(airplane,airport):
 	y = airplane.y - airport.y
 	manhattan = abs(x) + abs(y)
 	return manhattan
+
 """
 Beginning to implement A star algorithm
 """
