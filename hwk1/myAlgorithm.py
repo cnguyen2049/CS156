@@ -26,7 +26,7 @@ class PriorityQueue:
 	def __init__(self):
 		self.elements = []
 	def empty(self):
-		return len(self.elements) ==0
+		return len(self.elements) == 0
 	def length(self):
 		return len(self.elements)
 	def put(self, item,priority):
@@ -99,6 +99,7 @@ def astar (node,start,goal): #start and goal will be coordinates
 	closedList = []
 	accumulated_cost = []
 	openList = None
+"""
 	if(accumulated_cost + currentFuelCost > OurTotalFuel)
 	{
 		return false;
@@ -111,7 +112,7 @@ def astar (node,start,goal): #start and goal will be coordinates
 	{
 		#IGNORE THIS NODE
 	}
-	
+"""	
 	
 
 
@@ -129,12 +130,12 @@ pushing and adding to heap
 """
 print location
 heap = []
-testNode = Node(7,(startX,startY))
-testNode2 = Node(5,(5,5))
+testNode = Node(7,7,7)
+testNode2 = Node(5,5,5)
 heapq.heappush(heap,testNode)
 heapq.heappush(heap,testNode2)
 #heapq.heapify(heap)
-getValue = heapq.heappop(heap)[0]
-print getValue
+getValue = heapq.heappop(heap)
+print getValue.y
 
 
