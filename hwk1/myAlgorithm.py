@@ -23,13 +23,14 @@ class Node:
 	def getNext():
 		return self.nextEl
 
+
 testNode = Node(1,1,1,'airport',1)
 
 class PriorityQueue:
 	def __init__(self):
 		self.elements = []
 	def empty(self):
-		return len(self.elements) ==0
+		return len(self.elements) == 0
 	def length(self):
 		return len(self.elements)
 	def put(self, item,priority):
@@ -79,6 +80,19 @@ def planeFinder(startingMap,item):
 		#print "Y is %d" %(y)
 
 
+def euclidian(airplane,airport):
+	x = airplane.x - airport.x
+	y = airplane.y - airport.y
+	euclidian = math.sqrt(x*x + y * y)
+	return euclidian
+
+def manhattan(airplane,airport):
+	x = airplane.x - airport.x
+	y = airplane.y - airport.y
+	manhattan = abs(x) + abs(y)
+	return manhattan
+
+
 """
 Beginning to implement A star algorithm
 """
@@ -88,7 +102,12 @@ def astar (node,start,goal): #start and goal will be coordinates
 	closedList = []
 	accumulated_cost = []
 	openList = None
+<<<<<<< HEAD
 	"""if(accumulated_cost + currentFuelCost > OurTotalFuel)
+=======
+"""
+	if(accumulated_cost + currentFuelCost > OurTotalFuel)
+>>>>>>> origin/chris
 	{
 		return false;
 	}
@@ -100,7 +119,11 @@ def astar (node,start,goal): #start and goal will be coordinates
 	{
 		#IGNORE THIS NODE
 	}
+<<<<<<< HEAD
 	"""
+=======
+"""	
+>>>>>>> origin/chris
 	
 
 
@@ -118,14 +141,22 @@ pushing and adding to heap
 """
 
 heap = []
+<<<<<<< HEAD
 testNode = Node(location.x,location.y,10,'airplane',2)
 testNode2 = Node(5,5,5,'airport',3)
+=======
+testNode = Node(7,7,7)
+testNode2 = Node(5,5,5)
+>>>>>>> origin/chris
 heapq.heappush(heap,testNode)
 heapq.heappush(heap,testNode2)
 #heapq.heapify(heap)
 getValue = heapq.heappop(heap)
+<<<<<<< HEAD
 getValue2 = heapq.heappop(heap)
 
+=======
+>>>>>>> origin/chris
 print getValue.y
 
 
