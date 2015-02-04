@@ -23,6 +23,7 @@ class Node:
 	def getNext():
 		return self.nextEl
 
+
 testNode = Node(1,1,1,'airport',1)
 
 class PriorityQueue:
@@ -78,8 +79,7 @@ def planeFinder(startingMap,item):
 		y = y + 1
 		#print "Y is %d" %(y)
 
-<<<<<<< HEAD
-=======
+
 def euclidian(airplane,airport):
 	x = airplane.x - airport.x
 	y = airplane.y - airport.y
@@ -91,7 +91,7 @@ def manhattan(airplane,airport):
 	y = airplane.y - airport.y
 	manhattan = abs(x) + abs(y)
 	return manhattan
->>>>>>> origin/chris
+
 
 """
 Beginning to implement A star algorithm
@@ -107,7 +107,6 @@ def astar (node,start,goal): #start and goal will be coordinates
 =======
 """
 	if(accumulated_cost + currentFuelCost > OurTotalFuel)
->>>>>>> origin/chris
 	{
 		return false;
 	}
@@ -119,11 +118,11 @@ def astar (node,start,goal): #start and goal will be coordinates
 	{
 		#IGNORE THIS NODE
 	}
-<<<<<<< HEAD
-	"""
+
+"""
 =======
 """	
->>>>>>> origin/chris
+
 	
 
 

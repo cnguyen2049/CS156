@@ -102,28 +102,8 @@ def astar (node,start,goal): #start and goal will be coordinates
 	closedList = []
 	accumulated_cost = []
 	openList = None
-<<<<<<< HEAD
-	"""if(accumulated_cost + currentFuelCost > OurTotalFuel)
-=======
-"""
-	if(accumulated_cost + currentFuelCost > OurTotalFuel)
->>>>>>> origin/chris
-	{
-		return false;
-	}
-	else if (node.type == airport)
-	{
-		return true;
-	}
-	if(nodeToGrab is in closedList)
-	{
-		#IGNORE THIS NODE
-	}
-<<<<<<< HEAD
-	"""
-=======
-"""	
->>>>>>> origin/chris
+	
+
 	
 
 
