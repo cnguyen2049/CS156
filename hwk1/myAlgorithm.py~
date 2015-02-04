@@ -7,7 +7,32 @@ inputFile = sys.argv[1]
 
 values ={'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9}
 
+goal = {'H':'Goal'}
 
+class Node:
+	def __init__(self,x,y,fuel):
+		self.x = x
+		self.y = y
+		self.fuel = fuel
+		self.nextEl = None
+	def get_self(self):	
+		return self.fuel;
+	def getNext():
+		return self.nextEl
+
+testNode = Node(1,1,1)
+
+class PriorityQueue:
+	def __init__(self):
+		self.elements = []
+	def empty(self):
+		return len(self.elements) ==0
+	def length(self):
+		return len(self.elements)
+	def put(self, item,priority):
+		heapq.heappush(self.elements,(priority,item))
+	def get(self):
+		return heapq.heappop(self.elements)[1]
 
 """
 Beginning to write function to read in the text file
@@ -53,12 +78,10 @@ def planeFinder(startingMap,item):
 		y = y + 1
 		#print "Y is %d" %(y)
 
-"""
-A node function 
-"""
-
-def Node(coordinates,heuristic):
-	return coordinates,heuristic
+def euclidian(airplane,goal):
+	x = airplane.x - goal.x
+	y = airplane.y - goal.y
+	euclidian = 
 
 """
 Beginning to implement A star algorithm

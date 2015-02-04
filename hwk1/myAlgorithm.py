@@ -78,13 +78,17 @@ def planeFinder(startingMap,item):
 		y = y + 1
 		#print "Y is %d" %(y)
 
-"""
-A node function 
-"""
+def euclidian(airplane,airport):
+	x = airplane.x - airport.x
+	y = airplane.y - airport.y
+	euclidian = math.sqrt(x*x + y * y)
+	return euclidian
 
-def Node(coordinates,heuristic):
-	return coordinates,heuristic
-
+def manhattan(airplane,airport):
+	x = airplane.x - airport.x
+	y = airplane.y - airport.y
+	manhattan = abs(x) + abs(y)
+	return manhattan
 """
 Beginning to implement A star algorithm
 """
