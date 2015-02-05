@@ -15,13 +15,8 @@ class Node:
 		self.x = x
 		self.y = y
 		self.fuel = fuel
-		self.nextEl = None
-		self.state = state
-		self.cost = cost
-	def get_self(self):	
-		return self.fuel;
-	def getNext():
-		return self.nextEl
+		self.state = state #this is the letter
+		self.cost = cost #this is wind
 
 testNode = Node(1,1,1,'airport',1)
 
@@ -51,29 +46,28 @@ def readFile(inputFile):
 		startingMap.append(eachRow)	
 	return startingMap
 
-def checkMove(Map, airplane, move):
+def checkNeighbors(Map, airplane):
 	airX = airplane.x
 	airY = airplane.y
-	fuel = airplane.fuel
 	mapWidth = len(Map[0])
 	mapHeight = len(Map)
-	if airX == 0 and airY == 0 and move == ('up' or 'left'):
+	if airX < 0 and airY < 0:
 		return false
-	elif airX == 0 and move == 'left':
+	elif airX < 0:
 		return false
-	elif airX == mapWidth and move == 'right':
+	elif airX > mapWidth:
 		return false
-	elif airY == 0 and move == 'up':
+	elif airY < 0:
 		return false
-	elif airY == mapHeight and move == 'down':
+	elif airY > mapHeight:
 		return false
-	elif move == 'up' and fuel - Map[airY+1][airX] < 0:
+	elif fuel - (int)(Map[airY+1][airX]) >= 0:
+		return 
+	elif fuel - (int)(Map[airY-1][airX]) < 0:
 		return false
-	elif move == 'down' and fuel - Map[airY-1][airX] < 0:
+	elif fuel - (int)(Map[airY][airX+1]) < 0:
 		return false
-	elif move == 'right' and fuel - Map[airY][airX+1] < 0:
-		return false
-	elif move = 'left' and fuel - Map[airY][airX-1] < 0:
+	elif fuel - (int)(Map[airY][airX-1]) < 0:
 		return false
 	else
 		return true
@@ -109,12 +103,18 @@ def planeFinder(startingMap,item):
 """
 Beginning to implement A star algorithm
 """
-def astar (node,start,goal): #start and goal will be coordinates
-	frontier = []
+def astar (airplane, Map, goal): #start and goal will be Nodes
+	frontier = PriorityQueue()
 	frontier.put(start,0);
-	closedList = []
-	accumulated_cost = []
-	openList = None
+	closedList = set()
+	prevNode = 
+	path_cost = 0
+	while not frontier.empty():
+		node = frontier.get()
+		if node.state == 'H':
+			return true
+		closedList |= node
+		neighbors = createNeighbors(node,Map)
 	"""if(accumulated_cost + currentFuelCost > OurTotalFuel)
 	{
 		return false;
