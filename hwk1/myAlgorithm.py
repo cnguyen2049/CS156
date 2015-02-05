@@ -52,7 +52,25 @@ def readFile(inputFile):
 		startingMap.append(eachRow)	
 	return startingMap
 
+def checkMove(Map, airplane, move):
+	airX = airplane.x
+	airY = airplane.y
+	mapWidth = len(Map[0])
+	mapHeight = len(Map)
+	if airX == 0 and airY == 0 and move == ('up' or 'left'):
+		return false
+	elif airX == 0 and move == 'left':
+		return false
+	elif airX == mapWidth and move == 'right':
+		return false
+	elif airY == 0 and move == 'up':
+		return false
+	elif airY == mapHeight and move == 'down':
+		return false
+	else
+		return true
 
+	
 def printOut(startingMap):
 	output = ""
 	test = []
