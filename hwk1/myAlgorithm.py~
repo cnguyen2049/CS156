@@ -6,21 +6,24 @@ inputFile = sys.argv[1]
 #heuristic = sys.argv[2]
 
 values ={'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9}
-
-goal = {'H':'Goal'}
+values ={1:'A',2:'B',3'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I'}
+goal = {'H':'H'}
 
 class Node:
-	def __init__(self,x,y,fuel):
+	def __init__(self,x,y,fuel,state,cost):
 		self.x = x
 		self.y = y
 		self.fuel = fuel
+		self.state = state
+		self.cost = cost
 		self.nextEl = None
 	def get_self(self):	
 		return self.fuel;
 	def getNext():
 		return self.nextEl
 
-testNode = Node(1,1,1)
+
+findKey(values,2)
 
 class PriorityQueue:
 	def __init__(self):
@@ -34,9 +37,16 @@ class PriorityQueue:
 	def get(self):
 		return heapq.heappop(self.elements)[1]
 
+def buildNode(x,y,fuel,state,cost):
+	n = Node(x,y,fuel,state,cost)
+	return n
+
+MakeNode2 = buildNode(1,2,3,'A',5)
+print MakeNode2.state
 """
 Beginning to write function to read in the text file
 """
+
 def readFile(inputFile):
 	inputMap = open(inputFile,'r')
 	startingMap = []
@@ -45,7 +55,7 @@ def readFile(inputFile):
 		for character in line:
 			if line != '\n':
 				eachRow.append(character)
-		startingMap.append(eachRow)	
+		startingMap.append(eachRow)
 	return startingMap
 
 
@@ -59,24 +69,22 @@ def printOut(startingMap):
 	return test
 
 """
-This function finds the coordinates of the air plane
-and fuel
+This function finds the coordinates
+and the starting value of the fuel
 """
-def planeFinder(startingMap,item):
-	global startX , startY
+def Finder(startingMap,item):
 	y = 0
 	for eachRow in startingMap:
 		x = 0
 		for column in eachRow:
 			for key in values:
-				if column == key: 
-					startX = x
-					startY = y
-					return values[key]
+				if column == key:
+					return x,y,values[key]
 			x = x + 1
 			#print "X is %d" %(x)
 		y = y + 1
 		#print "Y is %d" %(y)
+
 
 def euclidian(airplane,airport):
 	x = airplane.x - airport.x
@@ -93,34 +101,30 @@ def manhattan(airplane,airport):
 """
 Beginning to implement A star algorithm
 """
-def astar (node,start,goal): #start and goal will be coordinates
-	frontier = []
-	frontier.put(start,0);
-	closedList = []
-	accumulated_cost = []
-	openList = None
-"""
-	if(accumulated_cost + currentFuelCost > OurTotalFuel)
-	{
-		return false;
-	}
-	else if (node.type == airport)
-	{
-		return true;
-	}
-	if(nodeToGrab is in closedList)
-	{
-		#IGNORE THIS NODE
-	}
-"""	
-	
+def can_move(Node,cost):
+	if(Node.fuel-cost>0):
+		return true
+	else:
+		return false
+
 
 
 input1 = readFile(inputFile)
+
+def astar (weather,start): #start and goal will be coordinates
+	openList = PriorityQueue()
+	openList.put(start,0);
+	closedList = set()
+
+	
+	
+	
+
+
+#input1 = readFile(inputFile)
 out = printOut(input1)
-location = planeFinder(input1,values)
-print "X is %d " %(startX)
-print "Y is %d " % (startY)
+location = Finder(input1,values)
+
 
 
 
@@ -128,14 +132,6 @@ print "Y is %d " % (startY)
 Sample code for heap in python
 pushing and adding to heap
 """
-print location
-heap = []
-testNode = Node(7,7,7)
-testNode2 = Node(5,5,5)
-heapq.heappush(heap,testNode)
-heapq.heappush(heap,testNode2)
-#heapq.heapify(heap)
-getValue = heapq.heappop(heap)
-print getValue
+
 
 
