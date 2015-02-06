@@ -59,33 +59,40 @@ def readFile(inputFile):
 		startingMap.append(eachRow)
 	return startingMap
 
-def checkNeighbors(Map, airplane):
-	airX = airplane.x
-	airY = airplane.y
+def checkNeighbors(Map,x,y):
+	airX = y
+	airY = x
 	mapWidth = len(Map[0])
 	mapHeight = len(Map)
 	if airX < 0 and airY < 0:
-		return false
+		return False
 	elif airX < 0:
-		return false
+		return False
 	elif airX > mapWidth:
 		return false
 	elif airY < 0:
-		return false
+		return False
 	elif airY > mapHeight:
-		return false
-	elif fuel - (int)(Map[airY+1][airX]) >= 0:
-		return 
-	elif fuel - (int)(Map[airY-1][airX]) < 0:
-		return false
-	elif fuel - (int)(Map[airY][airX+1]) < 0:
-		return false
-	elif fuel - (int)(Map[airY][airX-1]) < 0:
-		return false
-	else
-		return true
+		return False
+	else:
+		return True
 
-	
+
+
+def produceNodes(Map,node):
+	x = node.x
+	y = node.y
+	nodes = []
+	if checkNeighbors(Map,x-1,y) and (node.fuel - (int)(Map[x-1][y])):
+		nodes.append(buildNode(x-1,y,0,numbers[(int)(Map[x-1][y])],(int)(Map[x-1][y])))
+	if checkNeighbors(Map,x+1,y) and (node.fuel - (int)(Map[x+1][y])):
+		nodes.append(buildNode(x+1,y,0,numbers[(int)(Map[x+1][y])],(int)(Map[x+1][y])))
+	if checkNeighbors(Map,x,y-1) and (node.fuel - (int)(Map[x][y-1])):
+		nodes.append(buildNode(x,y-1,0,numbers[(int)(Map[x][y-1])],(int)(Map[x][y-1])))
+	if checkNeighbors(Map,x,y+1) and (node.fuel - (int)(Map[x][y+1])):
+		nodes.append(buildNode(x,y+1,0,numbers[(int)(Map[x][y+1])],(int)(Map[x][y+1])))
+	return nodes
+
 def printOut(startingMap):
 	output = ""
 	test = []
