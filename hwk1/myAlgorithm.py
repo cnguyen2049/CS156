@@ -7,12 +7,15 @@ h = sys.argv[2]
 global fuel 
 fuel = sys.argv[3]
 
-letters ={'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9}
+global letters 
+letters ={'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9,'P':0}
 numbers ={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I'}
 goal = {'P':'P'}
+airplane = ['A','B','C','D','E','F','G','H''I']
 
-
-
+for key in letters:
+	if key == 'B':
+		print "Found B"
 class Node:
 	def __init__(self,x,y,fuel,state,cost):
 		self.x = x
@@ -76,54 +79,86 @@ def checkNeighbors(Map,x,y):
 	else:
 		return True
 
-def ifLetter(letter,dictionary):
-	for key in dictionary:
-		if(letter == key):
+def ifLetter(letter,val):
+	loopval = 0
+	for key in val:
+		print key
+		print letter
+		print "Comparing %s and this %s" %(key,letter)
+		loopval = loopval + 1
+		#print loopval
+		if letter == key:
+			print "I returned true"
 			return True
-		else:
-			return False
+	return False
+def ifGoal(letter):
+	if(letter == 'P'):
+		return True
+	return False
+
 
 def produceNodes(Map,node):
 	y = node.x
 	x = node.y
 	nodes = []
 	
-	if checkNeighbors(Map,x-1,y) and (node.fuel - (int)(Map[x-1][y])):
-		state = (int)(Map[x-1][y])
-		cost = (int)(Map[x-1][y])
-		n = buildNode(x-1,y,0,numbers[state],cost)
-		nodes.append(n)
-	if checkNeighbors(Map,x+1,y) and (node.fuel - (int)(Map[x+1][y])):
-		state = (int)(Map[x+1][y])
-		cost = (int)(Map[x+1][y])
-		n = buildNode(x+1,y,0,numbers[state],cost)
-		nodes.append(n)
-	if checkNeighbors(Map,x,y-1) and (node.fuel - (int)(Map[x][y-1])):
-		state = (int)(Map[x-1][y])
-		nodes.append(buildNode(x,y-1,0,numbers[(int)(Map[x][y-1])],(int)(Map[x][y-1])))
 	
-	if (checkNeighbors(Map,x,y+1)) and (node.fuel - (int)(Map[x][y+1])):
-		state = (int)(Map[x][y+1])
-		cost = (int)(Map[x][y+1])
-		n = buildNode(x,y+1,0,numbers[state],cost)
-		nodes.append(n)
+	if checkNeighbors(Map,x,y-1):
+		value = (Map[x][y-1])
+		if not ifLetter(value,airplane) and not ifGoal(value):
+			state = (int)(Map[x][y-1])
+			cost = (int)(Map[x][y-1])
+			n = buildNode(x,y-1,0,numbers[state],cost)
+			nodes.append(n)
+		if ifGoal(value):
+			n = buildNode(x,y-1,0,'P',cost)
+			nodes.append(n)
+	if (checkNeighbors(Map,x,y+1)):
+		value = (Map[x][y+1])
+		print "Value inputted is %s" %(value)
+		if not ifLetter(value,letters) and not ifGoal(value):
+			state = (int)(Map[x][y+1])
+			cost = (int)(Map[x][y+1])
+			n = buildNode(x,y+1,0,numbers[state],cost)
+			nodes.append(n)
+		if ifGoal(value):
+			n = buildNode(x,y+1,0,'P',cost)
+			nodes.append(n)
+	if checkNeighbors(Map,x-1,y):
+		value = (Map[x-1][y])
+		print "Value inputted is %s" %(value)
+		if (not ifLetter(value,letters)):
+			state = (int)(Map[x-1][y])
+			cost = (int)(Map[x-1][y])
+			n = buildNode(x-1,y,0,numbers[state],cost)
+			nodes.append(n)
+		if ifGoal(value):
+			n = buildNode(x-1,y,0,goal['P'],0)
+			nodes.append(n)
+	if checkNeighbors(Map,x+1,y):
+		value = (Map[x+1][y])
+		if not ifLetter(value,letters):
+			state = (int)(Map[x+1][y])
+			cost = (int)(Map[x+1][y])
+			n = buildNode(x+1,y,0,numbers[state],cost)
+			nodes.append(n)
+		if ifGoal(value):
+			n = buildNode(x+1,y,0,'P',0)
+			nodes.append(n)
 	return nodes
 
 def printOut(startingMap):
 	output = ""
-	test = []
 	for eachRow in startingMap:
-		test.append(eachRow)
 		for element in eachRow:
 			output = output + element
-	return test
+	return output
 
 """
 This function finds the coordinates
 and the starting value of the fuel
 """
 def Finder(startingMap,item):
-	
 	fuel = 7
 	y = 0
 	for eachRow in startingMap:
@@ -187,29 +222,37 @@ def astar (Map,start,goal): #start and goal will be Nodes
 	
 	loop = 0
 	print frontier.empty()
+	print "Entering Loop"
 	while not frontier.empty():
 		print "We loop through %d" %(loop)
+		loop = loop + 1
 		node = frontier.get()
 		print "NODE STATE"
 		print node.state
-		if node.x == goal.x and node.y == goal.y:
+		if node.state == goal.state:
 			closedList.append(node)
 			print "Broke here 0"
 			return closedList
 		else:
 			print "Broke here 1"
 			closedList.append(node)
+			print "LENGTH OF CLOSED LIST!!!"
+			print len(closedList)
 			neighbors = produceNodes(Map,node)
 			print "Length of neighbor list %d " %(len(neighbors))
+			print "Points in neighbors of node %s" %(node.state)
+			
 			for next in neighbors:
 				print "next State is"
-				print next.state
-				if(next.x == goal.y and next.y == goal.y):
-					return closedList.append(next)
+				print next.cost
+				if(next.state == goal.state):
+					closedList.append(next)
+					return closedList
 				
 				g = node.cost + heuristic(next,node)
-				h = node.cost + heuristic(node,goal)
+				h = next.cost + heuristic(node,goal)
 				f = g + h
+				print node.state
 				print f,g,h
 				
 				if(checkInOpen(node,next,f)):
@@ -220,37 +263,70 @@ def astar (Map,start,goal): #start and goal will be Nodes
 					continue
 
 				else:
-					print "f is %d" %(f)
-					print "next.state is %s" %(next.state)
+					#print "f is %d" %(f)
+					#print "next.state is %s" %(next.state)
 					frontier.put(f,next)
-		
+	print "Exit loop"
+	print "Exiting function"
+	print "LENGTH OF CLOSED LIST"
+	
 	return closedList
+	
+def printStep(Map,path):
+	Map = readFile(inputFile)
+	output = printOut(Map)
+	steps = 0
+	for node in path:
+		print "Step %d" %(steps)
+		steps = steps + 1 
+		x = node.x
+		y = node.y
+		if(node.state == 'P'):
+			Map[x][y] = 'H'
+		else:
+			Map[x][y]= node.state
+		output = printOut(Map)
+
+		Map[x][y] = str(node.cost)
+		print output
 	
 
 Map = readFile(inputFile)
+output = printOut(Map)
+print output
+"""
 print Map
 testQ = PriorityQueue()
 testQ.put(1.222324323432,10)
 print "POP"
 print testQ.get()
+"""
 Goal = Finder(Map,goal)
 start = Finder(Map,letters)
-#Map[start.x][start.y] = letters[start.state]
-#Map[Goal.y][Goal.x] = 0
+"""
 print Map
 print "Goal X,Y"
 print Goal.x, Goal.y
+"""
 path = astar(Map,start,Goal)
-print path
+printStep(Map,path)
+#print path
+"""
 neighbors = produceNodes(Map,start)
 print "Print neighbors %d" % len(neighbors)
 print "Points in neighbors"
 for node in neighbors:
 	print node.x, node.y,node.state
 print "Points in path"
+"""
 for node in path:
 	print node.x, node.y,node.state
+
 """
+output = printOut(Map)
+print output
+
+
 print numbers[(int)(Map[1][3])]
 
 testNode = Node(0,0,0,0,0)
