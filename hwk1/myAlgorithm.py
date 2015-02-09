@@ -61,8 +61,8 @@ def readFile(inputFile):
 def checkNeighbors(Map,x,y):
 	airX = y
 	airY = x
-	mapWidth = len(Map[0])
-	mapHeight = len(Map)
+	mapWidth = len(Map[0])-1
+	mapHeight = len(Map)-1
 
 	if airX < 0 and airY < 0:
 		return False
@@ -293,14 +293,16 @@ def printStep(Map,path):
 
 			Map[x][y] = str(node.cost)
 			fuel = fuel - node.cost
-		print output
+			print output
+
 	
 
 Map = readFile(inputFile)
 output = printOut(Map)
 
-"""
+
 print Map
+"""
 testQ = PriorityQueue()
 testQ.put(1.222324323432,10)
 print "POP"
