@@ -15,6 +15,14 @@ airport = {'P':'P'}
 global airplane
 airplane = ['A','B','C','D','E','F','G','H','I']
 
+class Graph:
+    def __init__(self):
+        self.edges = {}
+    
+    def neighbors(self, id):
+        return self.edges[id]
+
+
 class PriorityQueue:
 	def __init__(self):
 		self.elements = []
@@ -22,8 +30,8 @@ class PriorityQueue:
 		return len(self.elements) ==0
 	def length(self):
 		return len(self.elements)
-	def put(self, item,priority):
-		heapq.heappush(self.elements,(priority,item))
+	def put(self, priority,item):
+		heapq.heappush(self.elements,(item,priority))
 	def get(self):
 		return heapq.heappop(self.elements)[0]
 """
@@ -51,11 +59,11 @@ def checkneighbors(Map,x,y):
 		return False
 	elif airX < 0:
 		return False
-	elif airX > mapWidth-1:
+	elif airX > mapWidth:
 		return False
 	elif airY < 0:
 		return False
-	elif airY > mapHeight-1:
+	elif airY > mapHeight:
 		return False
 	else:
 		return True
@@ -159,48 +167,46 @@ def astar (Map,start,goal): #start and goal will be Nodes
 	came_from ={start:None}
 	cost_so_far[start] = 0
 	closedset = {start}
-	loop += 1
-	print loop
+	neighbors = set()
 	while not frontier.empty():
-		move = 0
 		current = frontier.get()
-		#print "Current is"
-		print current
-		x = current[0]
-		y = current[1]
-		
+		print "Current is"
+		y = current[0]
+		x = current[1]
+		print current 
 		if current == goal:
 			print "BROKE HERE"
 			#print "Why doesn't it break here"
 			print current
 			came_from[current] = goal
 			break
-		neighbors = set()
-		if checkneighbors(Map,x+1,y) and not (x+1,y)in closedset:
-			neighbors  |= {(x+1,y)}
-		if checkneighbors(Map,x-1,y) and not (x-1,y)in closedset:
+		#print "Made empty set"
+		if checkneighbors(Map,x+1,y) and not (x+1,y)in came_from:
+			neighbors |= ({(x+1,y)})
+			print neighbors
+		if checkneighbors(Map,x-1,y) and not (x-1,y)in came_from:
 			neighbors  |= {(x-1,y)}
-		if checkneighbors(Map,x,y+1) and not (x,y+1)in closedset:
+			print neighbors
+		if checkneighbors(Map,x,y+1) and not (x,y+1)in came_from:
 			neighbors  |= {(x,y+1)}
-		if checkneighbors(Map,x,y-1) and not (x,y-1)in closedset:
+			print neighbors
+		if checkneighbors(Map,x,y-1) and not (x,y-1)in came_from:
 			neighbors  |= {(x,y-1)}	
-		#print "neighbors"
+			print neighbors
+		#print " all the elements in neighbors"
 		#print neighbors
+
 		print neighbors
 		for next in neighbors:
-			new_cost = cost_so_far[current] + 1
-			if next not in closedset:
-				print "Execute this baby"
-				
+			new_cost = cost_so_far[current]
+			if next not in came_from:
 				cost_so_far[next] = new_cost
 				priority = new_cost + heuristic(next,goal)
-				print "f is %d" %priority
-				print next
+				#print "f is %d" %priority
+				#print next
 				frontier.put(priority,next)
-				came_from[move] = current
-				#print "Came from added"
-		move +=1
-		print move
+				came_from[next] = current
+				#print "Came from added
 		closedset = closedset | {current}
 		if frontier == []:
 			return None
@@ -246,20 +252,84 @@ def reconstruct_path(came_from, start, goal):
         path.append(current)
     return path	
 
+def build_edges(Map,tup):
+	x = tup[1]
+	y = tup[0]
+	nodes = []
+	if checkneighbors(Map,x+1,y):
+		nodes.append((x+1,y))
+	if checkneighbors(Map,x-1,y):
+		nodes.append((x-1,y))
+	if checkneighbors(Map,x,y-1):
+		nodes.append((x,y-1))
+	if checkneighbors(Map,x,y+1):
+		nodes.append((x,y+1))
+	#print nodes
+	return nodes
+def build_graph(Map,g):
+	length =len(Map[0])-1
+	height = len(Map)
+	print height
+	print length
+	y = 0	
+	for y in range(0,height):
+		print "Y is %d" %y 
+		x = 0
+		for x in range (0,length):
+			neighbors = build_edges(Map,(x,y))
+			g.edges.update({(x,y):neighbors})
+			x += 1
+		y+= 1
+	return g			
 Map = readFile(inputFile)
 output = printOut(Map)
-print output
+#print output
 goal = Finder(Map,airport)
 start = Finder(Map,airplane)
-print goal
-print start
-path = astar(Map,start,goal)
-print path[0]
-if (2,1) == (2,1):
-	print "true"
-#solution = reconstruct_path(path,start,goal)
-
+#print goal
+#print start
+#path = astar(Map,start,goal)
+g = Graph()
+#g.edges = {(1,0):[(0,0)]}
+#g.edges.update({(2,0):[(1,1)]})
+g = build_graph(Map,g)
+print g.edges
 """
+g.edges = {
+    'A': ['B'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A'],
+    'D': ['E', 'A'],
+    'E': ['B']
+}
+"""
+#g = build_graph(Map,g)
+#print g.edges
+#g = build_edges(Map,g,start)
+#print g.edges
+"""
+g.edges = {(0,0):[(0,1),(1,0)]} 
+#print g.edges
+
+practice = []
+practice.append((1,0))
+practice.append((0,1))
+#print practice
+g.edges = {start:practice}
+"""
+#print g.edges
+#print path[0]
+#if (2,1) == (2,1):
+	#print "true"
+#solution = reconstruct_path(path,start,goal)
+"""	
+union = set()
+union |= {(2,1)}
+union |= {(0,0)}
+union |= {(1,1)}
+union |= {(2,2)}
+print union
+
 testq = PriorityQueue()
 
 tuple2 = (2,1)
