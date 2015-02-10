@@ -293,7 +293,7 @@ def printStep(Map,path):
 
 			Map[x][y] = str(node.cost)
 			fuel = fuel - node.cost
-		print output
+			print output
 	
 
 Map = readFile(inputFile)

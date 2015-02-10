@@ -322,11 +322,11 @@ print "Points in neighbors"
 for node in neighbors:
 	print node.x, node.y,node.state
 print "Points in path"
-"""
+
 for node in path:
 	print node.x, node.y,node.state
 
-"""
+
 output = printOut(Map)
 print output
 
