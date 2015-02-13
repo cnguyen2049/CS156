@@ -10,8 +10,11 @@ fuel = (int)(sys.argv[3])
 
 global letters 
 letters ={'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9}
-numbers ={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I',0:'H'}
-airport = {'P':0}
+numbers = {'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'P':0}
+letters_to_numbers ={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I',0:'H'}
+global goal_dic
+goal_dic = {}
+airport = {'P':'P'}
 global airplane
 airplane = ['A','B','C','D','E','F','G','H','I']
 
@@ -21,8 +24,7 @@ class Graph:
     
     def neighbors(self, id):
         return self.edges[id]
-
-
+	
 class PriorityQueue:
 	def __init__(self):
 		self.elements = []
@@ -49,12 +51,15 @@ def readfile(inputFile):
 		startingMap.append(eachRow)
 	return startingMap
 
-def checkneighbors(Map,x,y):
-	airX = y
-	airY = x
-	mapWidth = len(Map[0])-1
-	mapHeight = len(Map)-1
 
+def checkneighbors(Map,row,col):
+	airX = col
+	airY = row
+	#print "Row  %d and col %d" %(airY ,airX)
+	mapWidth = len(Map[0])-1
+	mapWidth -=2
+	mapHeight = len(Map)-1
+	#print (mapWidth,mapHeight)
 	if airX < 0 and airY < 0:
 		return False
 	elif airX < 0:
@@ -81,20 +86,22 @@ This function finds the coordinates
 and the starting value of the fuel
 """
 def Finder(startingMap,item):
+	node = []
 	fuel = 7
-	y = 0
+	row = 0
 	for eachRow in startingMap:
-		x = 0
+		col = 0
 		for column in eachRow:
 			for key in item:
 				if column == key: 
 					replace = item[key]
-					startingMap[y][x] = str(replace)
-					return y,x
-			x = x + 1
+					startingMap[row][col] = str(replace)
+					node.append((row,col))
+			col = col + 1
 			#print "X is %d" %(x)
-		y = y + 1
+		row = row + 1
 		#print "Y is %d" %(y)
+	return node
 
 def euclidian(node,goal):
 	x1 = node[0]
@@ -136,11 +143,20 @@ def astar (weathermap,start,goal): #start and goal will be Nodes
 			#print current
 			break
 		for next in weathermap.neighbors(current):
-			new_cost = cost_so_far[current] + 1
+			#print "next"
+			#print next
+			next_row = next[0]
+			next_col = next[1]
+			print next_row,next_col
+			val = Map[next_row][next_col]
+			print "val is %s" %val
+			new_cost = cost_so_far[current] + numbers[val]
 			if next not in cost_so_far or new_cost < cost_so_far[next]:
 				cost_so_far[next] = new_cost
 				f = new_cost + heuristic(next,goal)
 				frontier.put(f,next)
+				print "Added to the Open List"
+				print frontier.elements
 				came_from[next] = current
 		#if frontier == []:
 			#return None
@@ -179,13 +195,21 @@ def printStep(Map,path):
 			print "step %d fuel is %d" %(steps,tank)
 			row = path[i][0]
 			col = path[i][1]
-			tank = tank - int(Map[row][col])
-			val = int(Map[row][col])
-			Map[row][col] = str(numbers[val])
+			print Map
+			if Map[row][col] == 'P':
+				val = 0
+			else:
+				val = int(Map[row][col])
+			tank = tank - val
+			print Map
+			print str(numbers[str(val)])
+			Map[row][col] = str(letters_to_numbers[val])
+			print Map
 			print printOut(Map)			
 			#print Map
 			Map[row][col] = str(val)
 			i += 1	
+			steps += 1
 	return ""
 
 def reconstruct_path(came_from, start, goal):
@@ -197,29 +221,31 @@ def reconstruct_path(came_from, start, goal):
 	return path	
 
 def build_edges(Map,tup):
-	x = tup[0]
-	y = tup[1]
+	row = tup[0]
+	col = tup[1]
 	nodes = []
-	if checkneighbors(Map,x+1,y):
-		nodes.append((x+1,y))
-	if checkneighbors(Map,x-1,y):
-		nodes.append((x-1,y))
-	if checkneighbors(Map,x,y-1):
-		nodes.append((x,y-1))
-	if checkneighbors(Map,x,y+1):
-		nodes.append((x,y+1))
+	if checkneighbors(Map,row+1,col):
+		nodes.append((row+1,col))
+	if checkneighbors(Map,row-1,col):
+		nodes.append((row-1,col))
+	if checkneighbors(Map,row,col-1):
+		nodes.append((row,col-1))
+	if checkneighbors(Map,row,col+1):
+		nodes.append((row,col+1))
+	print nodes
 	return nodes
+
 def build_graph(Map,g):
-	length =len(Map[0])-1
+	length =len(Map[0]) -1
 	height = len(Map)
-	y = 0	
-	for y in range(0,height):
-		x = 0
-		for x in range (0,length):
-			neighbors = build_edges(Map,(x,y))
-			g.edges.update({(y,x):neighbors})
-			x += 1
-		y+= 1
+	row = 0	
+	for row in range(0,height):
+		col = 0
+		for col in range (0,length):
+			neighbors = build_edges(Map,(row,col))
+			g.edges.update({(row,col):neighbors})
+			col += 1
+		row+= 1
 	return g		
 
 	
@@ -227,14 +253,21 @@ global Map
 Map= readfile(inputFile)
 output = printOut(Map)
 global goal
-goal = Finder(Map,letters)
-start = Finder(Map,airport)
+input1 = Finder(Map,letters)
+input2 = Finder(Map,airport)
+start = input2[0]
+goal = input1[0]
+
+#print goal
+#print start
+#print Map
+
 g = Graph()
-
+#print Map[0][3]
 g = build_graph(Map,g)
-
+print sorted(g.edges)
+print g.edges
 solution = astar(g,start,goal)
 s = reconstruct_path(solution,start,goal)
 #print Map
 print printStep(Map,s)
-
