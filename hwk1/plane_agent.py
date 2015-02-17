@@ -41,10 +41,10 @@ class PriorityQueue:
         return len(self.elements)
 
     def put(self, priority, item):
-        heapq.heappush(self.elements, (item, priority))
+        heapq.heappush(self.elements, (priority,item))
 
     def get(self):
-        return heapq.heappop(self.elements)[0]
+        return heapq.heappop(self.elements)[1]
 """
 Beginning to write function to read in the text file
 """
@@ -63,21 +63,18 @@ def read_file(inputFile):
 
 
 def check_neighbors(Map, row, col):
-    air_x = col
-    air_y = row
-    map_width = len(Map[0])
-    print map_width
-    map_width -= 2
-    map_height = len(Map)
-    if air_x < 0 and air_y < 0:
+    airX = col
+    airY = row
+    # print "Row  %d and col %d" %(airY ,airX)
+    mapWidth = len(Map[0])-1
+    mapWidth -= 1
+    mapHeight = len(Map) - 1
+    #print (mapWidth,mapHeight)
+    if col < 0 or row < 0:
         return False
-    elif air_x < 0:
+    elif col > mapWidth:
         return False
-    elif air_x > map_width:
-        return False
-    elif air_y < 0:
-        return False
-    elif air_y > map_height:
+    elif row > mapHeight:
         return False
     else:
         return True
@@ -95,6 +92,7 @@ This function finds the coordinates
 and the starting value of the fuel
 """
 
+
 def finder(startingMap, item):
     node = []
     fuel = 7
@@ -108,48 +106,31 @@ def finder(startingMap, item):
                     startingMap[row][col] = str(replace)
                     node.append((row, col))
             col = col + 1
+            # print "X is %d" %(x)
         row = row + 1
+        # print "Y is %d" %(y)
     return node
 
 
 def euclidian(node, goal):
-<<<<<<< HEAD
-    print node 
-=======
-    print node,goal	
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
-    x1 = node[1]
-    y1 = node[0]
-    x2 = goal[1]
-    y2 = goal[0]
-<<<<<<< HEAD
-    euclidian = math.sqrt(x1 * x2 + y1 * y2)
-    return euclidian
-
-
-def manhattan(node, goal):
-    x1 = node[1]
-    y1 = node[0]
-    x2 = goal[1]
-    y2 = goal[0]
+    x1 = node[0]
+    y1 = node[1]
+    x2 = goal[0]
+    y2 = goal[1]
     x = x1 - x2
     y = y1 - y2
-    manhattan = abs(x) + abs(y)
-=======
-    x = x1 - x2
-    y = y1 - y2
-    euclidian = math.sqrt((x * x) + (y * y))
+    # print x1,y1
+    # print x2,y2
+    euclidian = math.sqrt(x * x + y * y)
     return euclidian
 
 
 def manhattan(tup1, tup2):
     col = tup1[1] - tup2[1]
     row = tup[0] - tup2[0]
-    manhattan = abs(col) + abs(row)
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
+    manhattan = abs(x) + abs(y)
     return manhattan
-def custom():
-	
+
 
 h = "euclidian"
 if h == "euclidian":
@@ -162,8 +143,8 @@ else:
 Beginning to implement A star algorithm
 """
 
+
 def astar(weathermap, start, goal):
-    tank = fuel
     frontier = PriorityQueue()
     frontier.put(0, start)
     path = {}
@@ -171,36 +152,35 @@ def astar(weathermap, start, goal):
     path[start] = None
     cost[start] = 0
     while not frontier.empty():
+        print frontier.elements
         current = frontier.get()
-        print current
         if current == goal:
             break
         for next in weathermap.neighbors(current):
             next_row = next[0]
             next_col = next[1]
-            val = input_map[next_row][next_col]
-            print val
+            print next_row,next_col
+            val = Map[next_row][next_col]
             new_cost = cost[current] + numbers[val]
             if next not in cost or new_cost < cost[next]:
                 cost[next] = new_cost
-                #print cost[next]
                 f = new_cost + heuristic(next, goal)
+                print f,next
                 frontier.put(f, next)
                 path[next] = current
-<<<<<<< HEAD
-=======
-                #print path
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
         if frontier == []:
             return None
     return path
 
-def check_fuel(input_map, path):
+
+def check_fuel(Map, path):
     tank = fuel
     for val in path:
+        # print path[i]
         col = val[1]
         row = val[0]
-        key = (input_map[row][col])
+        # print col,row
+        key = (Map[row][col])
         cost = numbers[key]
         tank = tank - cost
 
@@ -209,7 +189,8 @@ def check_fuel(input_map, path):
     else:
         return False
 
-def print_step(input_map, path):
+
+def print_step(Map, path):
     tank = fuel
     if(path is None):
         print "No route exists"
@@ -224,18 +205,18 @@ def print_step(input_map, path):
             if Map[row][col] == 'P':
                 val = 0
             else:
-                val = int(input_map[row][col])
+                val = int(Map[row][col])
             tank = tank - val
-            input_map[row][col] = str(letters_to_numbers[val])
-            print print_out(input_map)
-            input_map[row][col] = str(val)
+            Map[row][col] = str(letters_to_numbers[val])
+            print print_out(Map)
+            Map[row][col] = str(val)
             i += 1
             steps += 1
     return ""
 
+
 def reconstruct_path(came_from, start, goal):
     current = goal
-    print came_from
     path = [current]
     while current != start:
         current = came_from[current]
@@ -243,64 +224,81 @@ def reconstruct_path(came_from, start, goal):
     path.reverse()
     return path
 
-def build_edges(input_map, tup):
+
+def build_edges(Map, tup):
     row = tup[0]
     col = tup[1]
     nodes = []
-    if check_neighbors(input_map, row + 1, col):
+    if check_neighbors(Map, row + 1, col):
         nodes.append((row + 1, col))
-    if check_neighbors(input_map, row - 1, col):
+    if check_neighbors(Map, row - 1, col):
         nodes.append((row - 1, col))
-    if check_neighbors(input_map, row, col - 1):
+    if check_neighbors(Map, row, col - 1):
         nodes.append((row, col - 1))
-    if check_neighbors(input_map, row, col + 1):
+    if check_neighbors(Map, row, col + 1):
         nodes.append((row, col + 1))
     return nodes
 
-def build_graph(input_map, g):
-    length = len(input_map[0]) - 1
-    height = len(input_map)
-    row = 0
+
+def build_graph(Map, g):
+    length = len(Map[0])-1
+    height = len(Map)
+    #print height
     for row in range(0, height):
-        col = 0
         for col in range(0, length):
-            neighbors = build_edges(input_map, (row, col))
+            neighbors = build_edges(Map, (row, col))
             g.edges.update({(row, col): neighbors})
-            col += 1
-        row += 1
+        #col += 1
+    #row += 1
     return g
 
-<<<<<<< HEAD
 
 def execute(Map, g, start, goal):
-    if goal == []:
-		return None
-=======
-def execute(input_map, g, start, goal):
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
     if start == []:
 		return None
-		if goal == []:
-			return None
     s = start[0]
     for points in goal:
         goal_point = points
+        #print goal_point
         solution = astar(g, s, goal_point)
         path = reconstruct_path(solution, s, goal_point)
-        if not check_fuel(input_map, path):
+        if not check_fuel(Map, path):
             return path
     return None
 
-global input_map	
-input_map = read_file(inputFile)
-print input_map
+global Map
+Map = read_file(inputFile)
 global goal
-start = finder(input_map, letters)
 
-goal = finder(input_map, airport)
+start = finder(Map, letters)
+
+goal = finder(Map, airport)
 g = Graph()
-g = build_graph(input_map, g)
-print sorted(g.edges)
-answer = execute(input_map, g, start, goal)
-print_step(input_map, answer)
+g = build_graph(Map, g)
 
+answer = execute(Map, g, start, goal)
+#print answer
+print_step(Map, answer)
+#print check_neighbors(Map,1,3)
+#print build_edges(Map,(1,3))
+#print_step(Map, answer)
+
+"""
+start = input2[0]
+goal = input1[0]
+
+#print goal
+#print start
+#print Map
+
+g = Graph()
+#print Map[0][3]
+g = build_graph(Map,g)
+print sorted(g.edges)
+print g.edges
+solution = astar(g,start,goal)
+s = reconstruct_path(solution,start,goal)
+#print Map
+print printStep(Map,s)
+/n
+"""
