@@ -1,12 +1,22 @@
 """
-# Shunt
-# Chris
+#Authors
+Chris Nguyen - 007405892
+Shunt Balushian - 007111208
+#heuristics 
+line 138
+#astar
+line 186
 """
 import sys
 import copy
 import heapq
 import math
+
+if len(sys.argv) != 4:
+    print "Incorrect number of arguements"
+    quit()
 inputFile = sys.argv[1]
+
 h = sys.argv[2]
 global fuel
 fuel = (int)(sys.argv[3])
@@ -22,6 +32,11 @@ airport = {'P': 'P'}
 
 class Graph:
 
+    """
+    Graph class which uses a dictionary to hold the neighbors for each point
+    ex. {tuple:edges}
+    """
+
     def __init__(self):
         self.edges = {}
 
@@ -30,6 +45,16 @@ class Graph:
 
 
 class PriorityQueue:
+
+    """
+    PriorityQueue class which uses the python build in heapq
+    methods make it easier to call. 
+    init the elements in the object in list form
+    empty returns if it's empty (True or False)
+    length returns the length of the list
+    put pushes the item onto the heap :priority,item
+    get pops the item with the lowest value off the queue
+    """
 
     def __init__(self):
         self.elements = []
@@ -41,110 +66,152 @@ class PriorityQueue:
         return len(self.elements)
 
     def put(self, priority, item):
-        heapq.heappush(self.elements, (priority,item))
+        heapq.heappush(self.elements, (priority, item))
 
     def get(self):
         return heapq.heappop(self.elements)[1]
-"""
-Beginning to write function to read in the text file
-"""
 
 
-def read_file(inputFile):
-    inputMap = open(inputFile, 'r')
-    startingMap = []
-    for line in inputMap:
+def read_file(input_file):
+    """
+    Reads the inputed file and converts it to a 2D array
+    :param inputFile: The inputed text file
+    :return: 2D array
+    """
+    inputinput_map = open(input_file, 'r')
+    startinginput_map = []
+    for line in inputinput_map:
         eachRow = []
         for character in line:
             if line != '\n':
                 eachRow.append(character)
-        startingMap.append(eachRow)
-    return startingMap
+        startinginput_map.append(eachRow)
+    return startinginput_map
 
 
-def check_neighbors(Map, row, col):
-    airX = col
-    airY = row
-    # print "Row  %d and col %d" %(airY ,airX)
-    mapWidth = len(Map[0])-1
-    mapWidth -= 1
-    mapHeight = len(Map) - 1
-    #print (mapWidth,mapHeight)
+def check_neighbors(input_map, row, col):
+    """
+    Reads the inputed file and converts it to a 2D array
+    :param input_map: The inputed 2D array
+    :param row: height of the point (y-value)
+    :param col: width of the point (x-value)
+    :return: Boolean
+    """
+    input_map_width = len(input_map[0]) -2
+    input_map_height = len(input_map) - 1
+    #print input_map_height
     if col < 0 or row < 0:
         return False
-    elif col > mapWidth:
+    elif col > input_map_width and input_map_width <999:
         return False
-    elif row > mapHeight:
+    elif input_map_width >= 1000 and col >= input_map_width:
+        return False
+    elif row > input_map_height:
         return False
     else:
         return True
 
 
-def print_out(startingMap):
+def print_out(input_map):
+    """
+    Reads the inputed 2D array and converts to a string
+    :param input_map: The inputed 2D array
+    :return: output string
+    """
     output = ""
-    for eachRow in startingMap:
+    for eachRow in input_map:
         for element in eachRow:
             output = output + element
     return output
 
-"""
-This function finds the coordinates
-and the starting value of the fuel
-"""
 
-
-def finder(startingMap, item):
+def finder(input_map, item):
+    """
+    Finds the specific location of the desired item in the form
+    of a tuple.
+    :param input_map: The inputed 2D array
+    :param item: the desired item to be found
+    :return: tuple
+    """
     node = []
     fuel = 7
     row = 0
-    for eachRow in startingMap:
+    for eachRow in input_map:
         col = 0
         for column in eachRow:
             for key in item:
                 if column == key:
                     replace = item[key]
-                    startingMap[row][col] = str(replace)
+                    input_map[row][col] = str(replace)
                     node.append((row, col))
             col = col + 1
-            # print "X is %d" %(x)
         row = row + 1
-        # print "Y is %d" %(y)
     return node
 
+# heuristics
 
-def euclidian(node, goal):
+
+def euclidean(node, goal):
+    """
+    Computes the euclidian distance
+    :param node: tuple of the node location
+    :param goal: tuple of the goal location
+    :return: computed euclidian value
+    """
     x1 = node[0]
     y1 = node[1]
     x2 = goal[0]
     y2 = goal[1]
     x = x1 - x2
     y = y1 - y2
-    # print x1,y1
-    # print x2,y2
     euclidian = math.sqrt(x * x + y * y)
     return euclidian
 
 
-def manhattan(tup1, tup2):
-    col = tup1[1] - tup2[1]
-    row = tup[0] - tup2[0]
-    manhattan = abs(x) + abs(y)
+def manhattan(node, goal):
+    """
+    Computes the manhattan distance
+    :param node: tuple of the node location
+    :param goal: tuple of the goal location
+    :return: computed manhattan value
+    """
+    col = node[1] - goal[1]
+    row = node[0] - goal[0]
+    manhattan = abs(col) + abs(row)
     return manhattan
 
 
-h = "euclidian"
-if h == "euclidian":
-    heuristic = euclidian
-elif heur == "manhattan":
+def made_up(node, goal):
+    """
+    Computes the diagonal distance (Chebyshev distance)
+    :param node: tuple of the node location
+    :param goal: tuple of the goal location
+    :return: computed made_up value
+    """
+    col = abs(node[1] - goal[1])
+    row = abs(node[0] - goal[0])
+    custom = max(col, row)
+    return custom
+
+if h == "euclidean":
+    heuristic = euclidean
+elif h == "manhattan":
     heuristic = manhattan
 else:
-    heuristic = custom
-"""
-Beginning to implement A star algorithm
-"""
+    heuristic = made_up
+
+# a star algorithm
 
 
-def astar(weathermap, start, goal):
+def astar(weatherinput_map, start, goal):
+    """
+    Computes the path from the start tuple to the goal tuple
+    using the a start algorithm
+    :param input_map: The inputed 2D array
+    :param start: start tuple value
+    :param goal: goal tuple value
+    :return: path
+    """
     frontier = PriorityQueue()
     frontier.put(0, start)
     path = {}
@@ -152,20 +219,17 @@ def astar(weathermap, start, goal):
     path[start] = None
     cost[start] = 0
     while not frontier.empty():
-        print frontier.elements
         current = frontier.get()
         if current == goal:
             break
-        for next in weathermap.neighbors(current):
+        for next in weatherinput_map.neighbors(current):
             next_row = next[0]
             next_col = next[1]
-            print next_row,next_col
-            val = Map[next_row][next_col]
+            val = input_map[next_row][next_col]
             new_cost = cost[current] + numbers[val]
             if next not in cost or new_cost < cost[next]:
                 cost[next] = new_cost
                 f = new_cost + heuristic(next, goal)
-                print f,next
                 frontier.put(f, next)
                 path[next] = current
         if frontier == []:
@@ -173,49 +237,35 @@ def astar(weathermap, start, goal):
     return path
 
 
-def check_fuel(Map, path):
+def check_fuel(input_map, path):
+    """
+    Checks if the path violates the fuel contraint
+    :param input_map: The inputed 2D array
+    :param path: the computed solution
+    :return: Boolean
+    """
     tank = fuel
     for val in path:
-        # print path[i]
         col = val[1]
         row = val[0]
-        # print col,row
-        key = (Map[row][col])
+        key = (input_map[row][col])
         cost = numbers[key]
         tank = tank - cost
-
     if tank < 0:
         return True
     else:
         return False
 
 
-def print_step(Map, path):
-    tank = fuel
-    if(path is None):
-        print "No route exists"
-    else:
-        i = 0
-        steps = 1
-        length = len(path)
-        while i < length:
-            print "Map:%d Fuel is:%d" % (steps, tank)
-            row = path[i][0]
-            col = path[i][1]
-            if Map[row][col] == 'P':
-                val = 0
-            else:
-                val = int(Map[row][col])
-            tank = tank - val
-            Map[row][col] = str(letters_to_numbers[val])
-            print print_out(Map)
-            Map[row][col] = str(val)
-            i += 1
-            steps += 1
-    return ""
-
-
 def reconstruct_path(came_from, start, goal):
+    """
+    reconstructs the path that is outputed by the
+    a star algorithm. In a list form.
+    :param came_from: inputted path from a star function
+    :param start: start tuple value
+    :param goal: goal tuple value
+    :return: Path in list form
+    """
     current = goal
     path = [current]
     while current != start:
@@ -225,80 +275,106 @@ def reconstruct_path(came_from, start, goal):
     return path
 
 
-def build_edges(Map, tup):
+def build_edges(input_map, tup):
+    """
+    Constructs the possible neighbors for each node in the graph.
+    :param input_map: The inputed 2D array
+    :param tuple: tuple value of the form (y,x)
+    :return: nodes
+    """
     row = tup[0]
     col = tup[1]
     nodes = []
-    if check_neighbors(Map, row + 1, col):
+    if check_neighbors(input_map, row + 1, col):
         nodes.append((row + 1, col))
-    if check_neighbors(Map, row - 1, col):
+    if check_neighbors(input_map, row - 1, col):
         nodes.append((row - 1, col))
-    if check_neighbors(Map, row, col - 1):
+    if check_neighbors(input_map, row, col - 1):
         nodes.append((row, col - 1))
-    if check_neighbors(Map, row, col + 1):
+    if check_neighbors(input_map, row, col + 1):
         nodes.append((row, col + 1))
     return nodes
 
 
-def build_graph(Map, g):
-    length = len(Map[0])-1
-    height = len(Map)
+def build_graph(input_map, g):
+    """
+    Builds the dictionary graph so that each key is a tuple whoose
+    values are a list of their respective neighbors
+    :param input_map: The inputed 2D array
+    :param g: a graph object
+    :return: g
+    """
+    length = len(input_map[0]) - 1
+    #print length
+    height = len(input_map)
     #print height
     for row in range(0, height):
         for col in range(0, length):
-            neighbors = build_edges(Map, (row, col))
+            neighbors = build_edges(input_map, (row, col))
             g.edges.update({(row, col): neighbors})
-        #col += 1
-    #row += 1
     return g
 
 
-def execute(Map, g, start, goal):
+def print_step(input_map, path):
+    """
+    Print all the steps from the initial state to
+    the goal state
+    :param input_map: The inputed 2D array
+    :param path: the computed a star algorithm path
+    :return: string
+    """
+    tank = fuel
+    if(path is None):
+        print "No route exists"
+    else:
+        i = 0
+        steps = 1
+        length = len(path)
+        while i < length:
+            print "input_map:%d Fuel is:%d" % (steps, tank)
+            row = path[i][0]
+            col = path[i][1]
+            if input_map[row][col] == 'P':
+                val = 0
+            else:
+                val = int(input_map[row][col])
+            tank = tank - val
+            input_map[row][col] = str(letters_to_numbers[val])
+            print print_out(input_map)
+            input_map[row][col] = str(val)
+            i += 1
+            steps += 1
+    return ""
+
+
+def execute(input_map, g, start, goal):
+    """
+    A function designed to execute all the functions defined above.
+    So that it is all in one place. Also catches any potential errors.
+    :param input_map: The inputed 2D array
+    :param start: start tuple value
+    :param goal: goal tuple value
+    :return: None or a legitimate path
+    """
     if start == []:
-		return None
+        return None
+    if goal == []:
+        return None
     s = start[0]
     for points in goal:
         goal_point = points
-        #print goal_point
         solution = astar(g, s, goal_point)
         path = reconstruct_path(solution, s, goal_point)
-        if not check_fuel(Map, path):
+        if not check_fuel(input_map, path):
             return path
     return None
 
-global Map
-Map = read_file(inputFile)
+global input_map
+input_map = read_file(inputFile)
 global goal
-
-start = finder(Map, letters)
-
-goal = finder(Map, airport)
+start = finder(input_map, letters)
+goal = finder(input_map, airport)
 g = Graph()
-g = build_graph(Map, g)
-
-answer = execute(Map, g, start, goal)
-#print answer
-print_step(Map, answer)
-#print check_neighbors(Map,1,3)
-#print build_edges(Map,(1,3))
-#print_step(Map, answer)
-
-"""
-start = input2[0]
-goal = input1[0]
-
-#print goal
-#print start
-#print Map
-
-g = Graph()
-#print Map[0][3]
-g = build_graph(Map,g)
-print sorted(g.edges)
-print g.edges
-solution = astar(g,start,goal)
-s = reconstruct_path(solution,start,goal)
-#print Map
-print printStep(Map,s)
-/n
-"""
+g = build_graph(input_map, g)
+answer = execute(input_map, g, start, goal)
+print_step(input_map, answer)

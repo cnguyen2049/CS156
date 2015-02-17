@@ -113,16 +113,11 @@ def finder(startingMap, item):
 
 
 def euclidian(node, goal):
-<<<<<<< HEAD
-    print node 
-=======
-    print node,goal	
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
     x1 = node[1]
     y1 = node[0]
     x2 = goal[1]
     y2 = goal[0]
-<<<<<<< HEAD
+
     euclidian = math.sqrt(x1 * x2 + y1 * y2)
     return euclidian
 
@@ -135,7 +130,6 @@ def manhattan(node, goal):
     x = x1 - x2
     y = y1 - y2
     manhattan = abs(x) + abs(y)
-=======
     x = x1 - x2
     y = y1 - y2
     euclidian = math.sqrt((x * x) + (y * y))
@@ -146,7 +140,6 @@ def manhattan(tup1, tup2):
     col = tup1[1] - tup2[1]
     row = tup[0] - tup2[0]
     manhattan = abs(col) + abs(row)
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
     return manhattan
 
 
@@ -266,18 +259,17 @@ def build_graph(input_map, g):
         row += 1
     return g
 
-<<<<<<< HEAD
+
 
 def execute(Map, g, start, goal):
     if goal == []:
 		return None
-=======
+
 def execute(input_map, g, start, goal):
->>>>>>> 0c0086a3abe3d0dcbbfd1bf7b6159fdbf7080429
     if start == []:
 		return None
-		if goal == []:
-			return None
+    if goal == []:
+     return None
     s = start[0]
     for points in goal:
         goal_point = points
