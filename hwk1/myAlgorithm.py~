@@ -3,6 +3,14 @@ import sys
 import heapq
 import math
 inputFile = sys.argv[1]
+<<<<<<< HEAD
+#heuristic = sys.argv[2]
+#fuel = sys.argv[3]
+
+letters ={'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9}
+numbers ={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I'}
+goal = {'H':'H'}
+=======
 h = sys.argv[2]
 global fuel 
 fuel = (int)(sys.argv[3])
@@ -13,6 +21,7 @@ numbers ={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I'}
 goal = {'P':'P'}
 airplane = ['A','B','C','D','E','F','G','H','I']
 
+>>>>>>> master
 
 class Node:
 	def __init__(self,x,y,fuel,state,cost):
@@ -23,7 +32,10 @@ class Node:
 		self.cost = cost #this is wind
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 
 class PriorityQueue:
 	def __init__(self):
@@ -61,22 +73,53 @@ def readFile(inputFile):
 def checkNeighbors(Map,x,y):
 	airX = y
 	airY = x
+<<<<<<< HEAD
+	mapWidth = len(Map[0])
+	mapHeight = len(Map)
+=======
 	mapWidth = len(Map[0])-1
 	mapHeight = len(Map)-1
 
+>>>>>>> master
 	if airX < 0 and airY < 0:
 		return False
 	elif airX < 0:
 		return False
+<<<<<<< HEAD
+	elif airX > mapWidth:
+		return false
+	elif airY < 0:
+		return False
+	elif airY > mapHeight:
+=======
 	elif airX > mapWidth-1:
 		return false
 	elif airY < 0:
 		return False
 	elif airY > mapHeight-1:
+>>>>>>> master
 		return False
 	else:
 		return True
 
+<<<<<<< HEAD
+
+
+def produceNodes(Map,node):
+	x = node.x
+	y = node.y
+	nodes = []
+	if checkNeighbors(Map,x-1,y) and (node.fuel - (int)(Map[x-1][y])):
+		nodes.append(buildNode(x-1,y,0,numbers[(int)(Map[x-1][y])],(int)(Map[x-1][y])))
+	if checkNeighbors(Map,x+1,y) and (node.fuel - (int)(Map[x+1][y])):
+		nodes.append(buildNode(x+1,y,0,numbers[(int)(Map[x+1][y])],(int)(Map[x+1][y])))
+	if checkNeighbors(Map,x,y-1) and (node.fuel - (int)(Map[x][y-1])):
+		nodes.append(buildNode(x,y-1,0,numbers[(int)(Map[x][y-1])],(int)(Map[x][y-1])))
+	if checkNeighbors(Map,x,y+1) and (node.fuel - (int)(Map[x][y+1])):
+		nodes.append(buildNode(x,y+1,0,numbers[(int)(Map[x][y+1])],(int)(Map[x][y+1])))
+	return nodes
+
+=======
 def ifLetter(letter,val):
 	loopval = 0
 	for key in val:
@@ -145,6 +188,7 @@ def produceNodes(Map,node):
 			nodes.append(n)
 	return nodes
 
+>>>>>>> master
 def printOut(startingMap):
 	output = ""
 	for eachRow in startingMap:
@@ -164,7 +208,11 @@ def Finder(startingMap,item):
 		for column in eachRow:
 			for key in item:
 				if column == key: 
+<<<<<<< HEAD
+					return Node(x,y,fuel,'null',values[key])
+=======
 					return Node(x,y,fuel,key,item[key])
+>>>>>>> master
 			x = x + 1
 			#print "X is %d" %(x)
 		y = y + 1
@@ -217,12 +265,19 @@ def astar (Map,start,goal): #start and goal will be Nodes
 	global fuel	
 	tank = fuel	
 	frontier = PriorityQueue()
+<<<<<<< HEAD
+	frontier.put(start,0);
+	closedList = set()
+	prevNode = 0
+	path_cost = 0
+=======
 	frontier.put(0,start)
 	closedList = []
 	
 	loop = 0
 	#print frontier.empty()
 	#print "Entering Loop"
+>>>>>>> master
 	while not frontier.empty():
 		#print "We loop through %d" %(loop)
 		loop = loop + 1
@@ -294,10 +349,12 @@ def printStep(Map,path):
 			Map[x][y] = str(node.cost)
 			fuel = fuel - node.cost
 			print output
-<<<<<<< HEAD
-=======
 
->>>>>>> 97c9baa95f9e567ff8237c65b24d9ae6ee31bfcc
+<<<<<<< HEAD
+
+
+Map = readFile(inputFile)
+=======
 	
 
 Map = readFile(inputFile)
@@ -335,10 +392,16 @@ for node in path:
 output = printOut(Map)
 print output
 
+>>>>>>> master
 
 print numbers[(int)(Map[1][3])]
 
 testNode = Node(0,0,0,0,0)
 array = produceNodes(Map,testNode)
+<<<<<<< HEAD
+print array[0].x
+print array[0].y
+=======
 print len(array)
 """
+>>>>>>> master
