@@ -1,0 +1,255 @@
+
+\documentclass[a4paper,10pt]{article}
+\begin{document}
+
+Problem 1:\\
+\begin{flushleft}
+Initial: Number of attacking Queens: 4 \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     & & & \\ \hline
+    Q & Q & Q & Q \\ \hline
+    \end{tabular}
+\break
+\break
+\begin{flushleft}
+State 1:\\
+Number of attacking Queens: 4 \\
+Board Number :  \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     Q & & & \\ \hline
+     & Q & Q & Q \\ \hline
+    \end{tabular}
+\break
+\break
+\begin{flushleft}
+State 2:\\
+Number of attacking Queens: 2\\
+Board Number : 64\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & Q & & \\ \hline
+     & & & \\ \hline
+     Q & & & \\ \hline
+     & & Q & Q \\ \hline
+    \end{tabular}
+\break
+\break
+
+\begin{flushleft}
+State 3:\\
+Number of attacking Queens: 0\\
+Board Number :  768\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & Q & & \\ \hline
+     & & & Q \\ \hline
+     Q & & & \\ \hline
+     & & Q & \\ \hline
+    \end{tabular}
+\break
+
+\vspace{5mm}
+Problem 2:\\
+\begin{flushleft}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     Q & & & \\ \hline
+     & Q & &  \\ \hline
+     & & Q & \\ \hline
+     & & & Q\\ \hline
+    \end{tabular}
+\break
+
+\vspace{5mm}
+\break
+Problem 3:\\
+\begin{flushleft}
+Board 1:\\
+Number of attacking Queens: 4\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     Q & Q & Q & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 1:\\
+Number of attacking Queens: 4\\
+Board Number : 8\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     Q & & & \\ \hline
+     & Q & Q & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 2:\\
+Number of attacking Queens: 4\\
+Board Number : 12\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     Q & & & \\ \hline
+     & & & \\ \hline
+     & Q & Q & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Board 2:\\
+Number of attacking Queens: 4 \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     Q & & & \\ \hline
+     & Q & & \\ \hline
+     & & Q & \\ \hline
+     & & & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 1: \\
+Number of attacking Queens: 4 \\
+Board Number : 4\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & Q & & \\ \hline
+     & & Q & \\ \hline
+     Q & & & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 2: \\
+Number of attacking Queens: 4\\
+Board Number :  8\\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & Q & & \\ \hline
+     Q & & Q & \\ \hline
+     & & & Q \\ \hline
+    \end{tabular}
+\break
+\break
+After Selecting best children. We are left with :
+\break
+\begin{flushleft}
+New Board 1: \\
+Number of attacking Queens: 4 \\
+\vspace{5mm}
+
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     Q & & & \\ \hline
+     & Q & Q & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 1:\\
+Number of attacking Queens: 3 \\
+Board Number : 64 \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & Q & & \\ \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     Q & & Q & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 2:\\
+Number of attacking Queens: 3 \\
+Board Number : 192 \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & Q & \\ \hline
+     Q & & & \\ \hline
+     & Q & & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+New Board 2: \\
+Number of attacking Queens: 4\\
+\vspace{5mm}
+
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & Q & & \\ \hline
+     & & Q & \\ \hline
+     Q & & & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+Child 1:\\
+Number of attacking Queens: 3 \\
+Board Number :  64 \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & Q & & \\ \hline
+     & & & \\ \hline
+     & & Q & \\ \hline
+     Q & & & Q \\ \hline
+    \end{tabular}
+\begin{flushleft}
+\break
+Child 2:\\
+Number of attacking Queens: 4 \\
+Board Number : 128 \\
+\vspace{5mm}
+    \begin{tabular}{| l | l | l | l |}
+    \hline
+     & & & \\ \hline
+     & & & \\ \hline
+     & & Q & \\ \hline
+     Q & Q & & Q \\ \hline
+    \end{tabular}
+\end{left}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
