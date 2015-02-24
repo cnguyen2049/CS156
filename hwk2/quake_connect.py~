@@ -12,11 +12,6 @@ My idea is to have each Node represent a state in the game.
 
 class GameNode(object):
 
-    """
-    Node for each game state. I am thinking we can just store the state in lists of lists ( each row represents a row ) and we can easily delete the first row by popping.
-    We can also append the new rows by simply appending to the state list.
-    """
-
     def __init__(self):
         self.state = []
         self.parent = None
@@ -28,7 +23,6 @@ class GameNode(object):
 
     def getParent():
         return self.parent
-
 
 def winning_vertical(Node, symbol):
     """
@@ -49,31 +43,28 @@ def winning_vertical(Node, symbol):
     else:
         return 0
 
-
 class ConnectFour(object):
-
     """ A python class to do something for our assignment.
     """
     fmat_row = '|{}|{}|{}|{}|{}|{}|{}|'
     empty_row = '| | | | | | | |'
     base_row = '|1|2|3|4|5|6|7|'
-
     def __init__(self, player_first=False, indicate_quake=False):
         """ Inputs:
-                player_first: Boolean True condition for the player to go
+                player_first: Boolean True condition for the player to go 
                     first or False for computer to go first.
               indicate_quake: Boolean True for computer to indicate when
                     a quake happens or False to ask if a quake happened.
         """
         print self.empty_row, '\n', self.base_row
         # Use a Dictionary to store the positions as a First In Queue.
-        self.position_map = {1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: []}
-        self.max_height = 1  # Keep track of the max height for printing.
+        self.position_map = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[]}
+        self.max_height = 1 # Keep track of the max height for printing.
 
         if player_first:
             prompt_start = 'Please enter a slot from 1 to 7 for your move: '
             start_slot = int(raw_input(prompt_start))
-            if start_slot < 0 or start_slot > 7:  # Burp if out of range.
+            if start_slot < 0 or start_slot > 7: # Burp if out of range.
                 raise ValueError('Invalid start position')
             self.position_map[start_slot].append('X')
             self.print_map('Your Move')
@@ -87,9 +78,9 @@ class ConnectFour(object):
         """
         print 'Board After {}:'.format(who_move)
         print self.empty_row
-        for row in range(self.max_height - 1, -1, -1):
+        for row in range(self.max_height-1, -1, -1):
             row_str = ''
-            for column in range(1, 8):
+            for column in range(1, 8): 
                 value = self.position_map[column]
                 if len(value) > row:
                     row_str += '|{}'.format(value[row])
@@ -111,6 +102,8 @@ class ConnectFour(object):
         column_height = len(self.position_map[column])
         if column_height > self.max_height:
             self.max_height = column_height
+
+
 
 
 if __name__ == '__main__':
