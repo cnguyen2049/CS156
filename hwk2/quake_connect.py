@@ -7,6 +7,12 @@ bottom_row = "|1|2|3|4|5|6|7|"
 empty_row = '| | | | | | | |'
 null_row = [0,0,0,0,0,0,0]
 
+"""
+I am thinking we can represent the board like this
+0 if its empty and we can change the value to X or O
+given the situation
+
+"""
 the_board = [[0,0,0,0,0,0,0],  # 7 x infinity
              [0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0],
@@ -73,6 +79,10 @@ def winning_vertical(Node,symbol):
     return 0
 
 def print_map(the_board):
+    """
+    Prints out the map like the Pollet example.
+    param: a board state
+    """
     row_str = ''
     iterations = 1
     for row in the_board:
