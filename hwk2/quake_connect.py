@@ -3,7 +3,14 @@
 import sys
 import random as rand
 
+empty_row = [0,0,0,0,0,0,0]
 
+the_board = [[0,0,0,0,0,0,0],  # 7 x infinity
+             [0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0]]
 """
 My idea is to have each Node represent a state in the game.
 -Chris
@@ -30,25 +37,38 @@ class GameNode(object):
         return self.parent
 
 
-def winning_vertical(Node, symbol):
+def winning_horizontal(Node, symbol):
     """
     Find the winning state
     """
     count = 0
     current = Node.getState()
-    # check vertical winning positions
+    # check horizontal winning positions
     for n in current:
         for el in n:
             if(el == symbol):
                 count += 1
-            if(el != symbol):
+            else:
                 count = 0
-                break
-    if count == 4:
-        return 1
-    else:
-        return 0
+            if count == 4:
+                return 1
+    return 0
 
+def winning_vertical(Node,symbol):
+    """
+    Find winning state for vertical
+    """
+    count = 0
+    current = Node.getState()
+    for i in range(7):
+        for n in current:
+            if n[i] == symbol:
+                count += 1
+            else:
+                count = 0
+            if count == 4:
+                return 1
+   return 0
 
 class ConnectFour(object):
 
