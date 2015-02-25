@@ -4,7 +4,8 @@ import sys
 import random as rand
 
 bottom_row = "|1|2|3|4|5|6|7|"
-empty_row = [0,0,0,0,0,0,0]
+empty_row = '| | | | | | | |'
+null_row = [0,0,0,0,0,0,0]
 
 the_board = [[0,0,0,0,0,0,0],  # 7 x infinity
              [0,0,0,0,0,0,0],
@@ -72,20 +73,21 @@ def winning_vertical(Node,symbol):
     return 0
 
 def print_map(the_board):
-	row_str = ''
-	iterations = 1
-	for row in the_board:
-		for el in row:
-			if( el == 'X' or el == 'O'):
-				row_str += '|{}'.format(el)
-			else:
-				row_str += '| '
-			#row_str += '|'
-			if iterations % 7 == 0:
-				row_str += '|'
-				row_str += '\n'
-			iterations += 1
-	print row_str
+    row_str = ''
+    iterations = 1
+    for row in the_board:
+        for el in row:
+            if(el == 'X' or el == 'O'):
+                row_str += '|{}'.format(el)
+            else:
+                row_str += '| '
+            if iterations % 7 == 0:
+                row_str += '|'
+                row_str += '\n'
+            iterations += 1
+    row_str += bottom_row
+    print empty_row
+    print row_str
 
 
 class ConnectFour(object):
