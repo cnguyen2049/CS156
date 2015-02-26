@@ -50,33 +50,34 @@ def winning_horizontal(Node, symbol):
     Find the winning state
     """
     count = 0
-    current = Node.getState()
     # check horizontal winning positions
-    for n in current:
+    for n in the_board:
         for el in n:
             if(el == symbol):
                 count += 1
             else:
                 count = 0
             if count == 4:
-                return 1
-    return 0
+                return True
+    return False
 
-def winning_vertical(Node,symbol):
+def winning_vertical(the_board,symbol):
     """
     Find winning state for vertical
     """
     count = 0
-    current = Node.getState()
     for i in range(7):
-        for n in current:
+        for n in the_board:
             if n[i] == symbol:
                 count += 1
             else:
                 count = 0
             if count == 4:
-                return 1
-    return 0
+                return True
+    return False
+
+
+
 
 def print_map(the_board):
     """
@@ -87,8 +88,10 @@ def print_map(the_board):
     iterations = 1
     for row in the_board:
         for el in row:
-            if(el == 'X' or el == 'O'):
-                row_str += '|{}'.format(el)
+            if(el == 1):
+                row_str += '|{}'.format('X')
+            elif(el == 2):
+                row_str += '|{}'.format('O')
             else:
                 row_str += '| '
             if iterations % 7 == 0:
