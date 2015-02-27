@@ -1,6 +1,7 @@
 """ A python module to play a variant of the popular Connect Four game.
 """
 import sys
+import copy
 import random as rand
 
 bottom_row = "|1|2|3|4|5|6|7|"
@@ -23,6 +24,47 @@ the_board = [[0,0,0,0,0,0,0],  # 7 x infinity
 My idea is to have each Node represent a state in the game.
 -Chris
 """
+
+class GameBoard(object):
+    """ A game board object.
+    """
+    def __init__(self, width=7, init_height=6):
+        """ height_map: A variable to store the use height of the
+                columns of the board.
+            the_board: A list of lists which represents the board.
+        """
+        self.row_gen = lambda num_cols: [0 for val in range(num_cols)]
+        self.the_board = [self.row_gen(width) for row in range(init_height)]
+        self.height_map = self.row_gen(width)
+        self.width = width
+
+    def __repr__(self):
+        map_str = '['
+        for cnt, row in enumerate(self.the_board):
+            if cnt == 1:
+                map_str += '{}\n'.format(row)
+            elif cnt != len(self.the_board) - 1:
+                map_str += ' {}\n'.format(row)
+            else:
+                map_str += ' {}]\n'.format(row)
+        return map_str
+
+    def __str__(self):
+        return self.__repr__()
+
+    def insert(self, column_num, value):
+        """ column_number: The Zero left aligned column index to insert value
+            value: The value to be inserted
+        """
+        # Insert a new row if we're at the top of this column_num
+        col_height = self.height_map[column_num] 
+        if col_height == len(self.the_board):
+            self.the_board.insert(0, self.row_gen(self.width))
+        col_index = col_height + 1
+        row_index = len(self.the_board) - col_index
+        self.the_board[row_index][column_num] = value
+        self.height_map[column_num] += 1
+
 
 
 class GameNode(object):
@@ -181,3 +223,8 @@ class ConnectFour(object):
 if __name__ == '__main__':
     import copy
     ARGS = copy.deepcopy(sys.argv)
+
+
+
+G1 = GameBoard()
+print G1.__str__()
