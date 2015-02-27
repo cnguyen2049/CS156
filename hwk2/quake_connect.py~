@@ -45,7 +45,7 @@ class GameNode(object):
         return self.parent
 
 
-def winning_horizontal(Node, symbol):
+def win_horizontal(Node, symbol,num):
     """
     Find the winning state
     """
@@ -57,11 +57,11 @@ def winning_horizontal(Node, symbol):
                 count += 1
             else:
                 count = 0
-            if count == 4:
+            if count == num:
                 return True
     return False
 
-def winning_vertical(the_board,symbol):
+def win_vertical(the_board,symbol,num):
     """
     Find winning state for vertical
     """
@@ -76,15 +76,20 @@ def winning_vertical(the_board,symbol):
                 return True
     return False
 
-def winning_diagonal(the_board,symbol):
-    board_height = len(the_board)
-    if(board_height < 4):
-        return False
-    for position in range(board_height):
-        for ver in the_board:
-            
-    
-
+def check_diagonal(the_board,symbol):
+    height = len(the_board)
+    count = 1
+    for row in range(height-3):
+        for col in range(4):
+             if(the_board[row][col] == 1 and the_board[row+1][col+1] == 1 and the_board[row+2][col+2] == 1 and the_board[row+3][col+3] == 1):
+                 return True
+    for row in range(height-1,2,-1):
+        for col in range(0,3):
+             print (row,col)
+             #print row+1,col+1
+             if(the_board[row][col] == 1 and the_board[row-1][col+1] == 1 and the_board[row-2][col+2] == 1 and the_board[row-3][col+3] == 1):
+                 return True        
+    return False
 
 
 def print_map(the_board):
