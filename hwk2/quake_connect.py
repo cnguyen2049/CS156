@@ -57,6 +57,15 @@ class GameBoard(object):
     def __str__(self):
         return self.__repr__()
 
+    def earthquake(self):
+        """ A function to cause an earthquake.
+        """
+        base_row = self.the_board.pop(len(the_board)-1)
+        for cnt, b_row in enumerate(base_row):
+            if b_row != 0:
+                self.height_map[cnt] -= 1
+        del base_row
+
     def insert(self, column_num, value):
         """ column_number: The Zero left aligned column index to insert value
             value: The value to be inserted
@@ -73,13 +82,19 @@ class GameBoard(object):
 
 
 class GameNode(object):
-
     """
-    Node for each game state. I am thinking we can just store the state in lists of lists ( each row represents a row ) and we can easily delete the first row by popping.
-    We can also append the new rows by simply appending to the state list.
+    Node for each game state. I am thinking we can just store the state in
+    lists of lists ( each row represents a row ) and we can easily delete the
+    first row by popping. We can also append the new rows by simply
+    appending to the state list.
     """
 
     def __init__(self, parent=None):
+        """ Inputs:
+        parent: a parent GameNode() object of this GameNode.
+        This copies the state of <parent> into self.node_board since the child
+        has the configuration of the parent plus one move.
+        """
         self.state = []
         self.alpha = 0
         if type(parent) is GameNode:
@@ -89,7 +104,7 @@ class GameNode(object):
             # If we're the root node, set parent to our own reference.
             self.parent = self
             self.node_board = GameBoard()
-
+            # If no parent.  We're first.
 
     def getState(self):
         return self.state
@@ -115,7 +130,7 @@ def get_heuristic(the_board, symbol, row_index, column_index):
     return max(heuristics)
 
 def heuristic_horizontal(the_board, symbol, row_index, column_index):
-    """
+    """ A Method which only checks the number of symbol to the right of indexes.
     Inputs:
         the_board- A nested list of list object representing the board.
         symbol   - The symbol whose heuristic is to be calculated.
@@ -123,7 +138,9 @@ def heuristic_horizontal(the_board, symbol, row_index, column_index):
         column_index- The index of the column to check
     """
     r_ind, c_ind = row_index, column_index
+    # Ignore symbols we don't care about.
     this_symbol = lambda: the_board[r_ind][c_ind] == symbol 
+    # Don't exceed the right side of the rows of the_board.
     right_bound = lambda: c_ind < len(the_board[r_ind])
     heuristic = 0
     while(this_symbol() and right_bound()):
@@ -132,7 +149,7 @@ def heuristic_horizontal(the_board, symbol, row_index, column_index):
     return heuristic
 
 def heuristic_vertical(the_board, symbol, row_index, column_index):
-    """
+    """ A Method which only checks the number of symbol above the indexes.
     Inputs:
         the_board- A nested list of list object representing the board.
         symbol   - The symbol whose heuristic is to be calculated.
@@ -140,7 +157,9 @@ def heuristic_vertical(the_board, symbol, row_index, column_index):
         column_index- The index of the column to check
     """
     r_ind, c_ind = row_index, column_index
+    # Ignore symbols we don't care about.
     this_symbol = lambda: the_board[r_ind][c_ind] == symbol 
+    # Don't exceed the size of the columns of the_board
     upper_bound = lambda: r_ind >= 0 
     heuristic = 0
     while(this_symbol() and upper_bound()):
@@ -149,29 +168,33 @@ def heuristic_vertical(the_board, symbol, row_index, column_index):
     return heuristic
 
 def heuristic_diagonal(the_board, symbol, row_index, column_index):
-    """
+    """ A Method which checks the number of symbol to the upper diagonals of indexes.
     Inputs:
         the_board- A nested list of list object representing the board.
         symbol   - The symbol whose heuristic is to be calculated.
         row_index- The index of the list which represents the row.
         column_index- The index of the column to check
     """
-    r_ind, c_ind = row_index, column_index
-    left_heuristic, right_heuristic = 0, 0
+    # Ignore symbols we don't care about.
     this_symbol = lambda: the_board[r_ind][c_ind] == symbol 
+    # Boundary booleans.  Don't exceed the limits of the matrix.
     right_bound = lambda: c_ind < len(the_board[r_ind])  
     upper_bound = lambda: r_ind >= 0 
     left_bound = lambda: c_ind >= 0 
+    left_heuristic, right_heuristic = 0, 0
     # Check left diagonal.
+    r_ind, c_ind = row_index, column_index
     while(this_symbol() and left_bound() and upper_bound()):
         left_heuristic += 1
+        # Up left is actually left one and up one, hince r_ind -=1
         c_ind -= 1
         r_ind -= 1
 
-    r_ind, c_ind = row_index, column_index
     # Check right diagonal.
+    r_ind, c_ind = row_index, column_index
     while(this_symbol() and right_bound()  and upper_bound()):
         right_heuristic += 1
+        # Up right is actually to the right one and up one, hince r_ind -=1
         c_ind += 1
         r_ind -= 1
     return max([left_heuristic, right_heuristic])
@@ -209,7 +232,7 @@ def win_vertical(the_board,symbol,num):
     return False
 
 def check_diagonal(the_board,symbol):
-    height = len(the_board)
+    height = the_board.node_board
     for row in range(height-3):
         for col in range(4):
              if(the_board[row][col] == 1 and the_board[row+1][col+1] == 1 and the_board[row+2][col+2] == 1 and the_board[row+3][col+3] == 1):
@@ -222,12 +245,20 @@ def check_diagonal(the_board,symbol):
                  return True        
     return False
 
-def terminal_test(the_board,symbol):
-    if check_diagonal(the_board,symbol) == True or win_vertical(the_board,symbol,4) == True or win_horizontal(the_board,symbol,4):
+def get_winner(the_board,symbol):
+    if check_diagonal(the_board,symbol) == True or win_vertical(the_board,symbol) == True or win_horizontal(the_board,symbol) == True:
         return True
-    return False;
+    return False 
 
-def print_global_map(the_board):
+def earthquake():
+    "Roll the dice function"
+    num = randInt(1,6)
+    if num == 6:
+        return True
+    return False
+
+
+def print_map(the_board):
     """
     Prints out the map like the Pollet example.
     param: a board state
@@ -245,6 +276,24 @@ def print_global_map(the_board):
     print empty_row
     print row_str
 
+def human_player():
+    prompt_start = 'Please enter a slot from 1 to 7 for your move: '
+    print prompt_start, 
+    invalid = True
+    while(invalid):
+        try:
+            start_slot = int(raw_input(''))
+            if start_slot <= 0 or start_slot > 7:  # Burp if out of range.
+                raise ValueError('Invalid position')
+            invalid = False
+        except ValueError:
+            print 'Invalid Input.  Enter a slot from 1 to 7: ', 
+            invalid = True
+    return start_slot-1
+
+def computer_player():
+    return rand.randint(0, 6)
+
 
 class ConnectFour(object):
 
@@ -253,6 +302,13 @@ class ConnectFour(object):
     fmat_row = '|{}|{}|{}|{}|{}|{}|{}|'
     empty_row = '| | | | | | | |'
     base_row = '|1|2|3|4|5|6|7|'
+    # A map to assign the Character symbols to the value.
+    player_map = {0:'', 1:'X', 2:'O'}
+    # A Map to flip the turn. Hopefully Zero will cause an exception.
+    opposite_turn = {0:0, 1:2, 2:1}
+    first_player, second_player = 1, 2
+    player_map = {}
+    root_depth = 0
 
     def __init__(self, player_first=False, indicate_quake=False):
         """ Inputs:
@@ -261,60 +317,87 @@ class ConnectFour(object):
               indicate_quake: Boolean True for computer to indicate when
                     a quake happens or False to ask if a quake happened.
         """
-        print self.empty_row, '\n', self.base_row
-        # Use a Dictionary to store the positions as a First In Queue.
-        self.position_map = {1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: []}
-        self.max_height = 1  # Keep track of the max height for printing.
-
+        player_1, player_2 = self.first_player, self.second_player
+        self.root_state = GameNode()
+        self.tree_map = {}
+        self.turn_map = {}
+        self.turn = player_1
         if player_first:
-            prompt_start = 'Please enter a slot from 1 to 7 for your move: '
-            start_slot = int(raw_input(prompt_start))
-            if start_slot < 0 or start_slot > 7:  # Burp if out of range.
-                raise ValueError('Invalid start position')
-            self.position_map[start_slot].append('X')
-            self.print_map('Your Move')
+            self.player_map = {player_1: human_player, player_2: computer_player}
+            self.move_map = {player_1:'Your Move', player_2:'My Move'}
+            start_slot = self.player_map[player_1]() # Key out the function.
+            self.insert(start_slot, player_1)
+            self.print_map()
         else:
-            start_slot = rand.randint(0, 7)
-            self.position_map[start_slot].append('O')
-            self.print_map('My Move')
+            self.player_map = {player_1: computer_player, player_2: human_player}
+            self.move_map = {player_1:'My Move', player_2:'Your Move'}
+            start_slot = 3 # The middle is the best possible opening move.
+            self.insert(start_slot, player_1)
+            self.print_map()
+        self.state_machine()
 
-    def print_map(self, who_move):
+    def print_map(self):
         """ A function to print the map in it's current state.
         """
-        print 'Board After {}:'.format(who_move)
-        print self.empty_row
-        for row in range(self.max_height - 1, -1, -1):
-            row_str = ''
-            for column in range(1, 8):
-                value = self.position_map[column]
-                if len(value) > row:
-                    row_str += '|{}'.format(value[row])
-                else:
-                    row_str += '| '
-            row_str += '|'
-            print row_str
-        print self.base_row
+        this_move = self.move_map[self.turn]
+        print 'Board After {}:'.format(this_move)
+        print_map(self.root_state.node_board.the_board)
 
-    def insert_move(self, player, column):
+    def insert(self, column, player):
         """ A function to insert a players move in the correct column.
             Inputs:
                 player: String with 'X' or 'O'
                 column: Integer value with domain [0, 7]
         """
-        if player != 'X' and player != 'O':
-            raise ValueError('This is not the correct notation for a player.')
-        self.position_map[column].append(player)
-        column_height = len(self.position_map[column])
-        if column_height > self.max_height:
-            self.max_height = column_height
+        self.turn = player
+        self.root_state.node_board.insert(column, player)
+
+    def state_machine(self):
+        """ A fucntion to handle the turn taking process between player
+        and the algorithm.
+        """
+        self.turn = self.opposite_turn[self.turn]
+        # xrange on the number of turns.
+        for cnt in xrange(10):
+            move = self.player_map[self.turn]() # Key out the function.
+            self.insert(move, self.turn)
+            self.print_map()
+            self.turn = self.opposite_turn[self.turn]
+
+    def generate_successors(self, depth):
+        """ Generate the sucessor tree of the current state of the board with
+        <depth> nodes below.
+        self.tree_map = {depth_of_tree: [list_of_childeren]}
+        # The child of tree_map[depth][N] is tree_map[depth+1][N*7]
+        """
+        # Clear the map of depths for new tree & the map of whose turn @ depth
+        self.tree_map, self.turn_map = {}, {}
+        self.turn_map[self.root_depth] = self.turn
+        self.tree_map[self.root_depth] = [self.root_state]
+        # This is the turn which is opposite to the turn at this state.
+        turn_tracker = self.opposite_turn[self.turn]
+        depth_tracker = 1
+        while(depth_tracker <= depth):
+            childeren = []
+            for parent in self.tree_map[depth_tracker-1]:
+                # Record whose turn it was at this depth.
+                self.turn_map[depth_tracker] = turn_tracker
+                # Seven childeren for a width of 7 board.
+                for cnt in range(7):
+                    # Passing the parent node, and the turn at child node.
+                    child = GameNode(parent=parent)
+                    # Insert the next move for the right turn.
+                    child.node_board.insert(cnt, turn_tracker)
+                    childeren.append(child)
+            # Flip the turn for the next level.
+            turn_tracker = self.opposite_turn[turn_tracker]
+            self.tree_map[depth_tracker] = childeren
+            depth_tracker += 1
 
 
 if __name__ == '__main__':
     import copy
     ARGS = copy.deepcopy(sys.argv)
 
-
-
-G1 = GameBoard()
-print G1.__str__()
+C = ConnectFour()
 
