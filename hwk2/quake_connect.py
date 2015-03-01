@@ -28,20 +28,25 @@ My idea is to have each Node represent a state in the game.
 class GameBoard(object):
     """ A game board object.
     """
-    def __init__(self, width=7, init_height=6):
+    def __init__(self, width=7, init_height=6, game_board=None):
         """ height_map: A variable to store the use height of the
                 columns of the board.
             the_board: A list of lists which represents the board.
         """
         self.row_gen = lambda num_cols: [0 for val in range(num_cols)]
-        self.the_board = [self.row_gen(width) for row in range(init_height)]
-        self.height_map = self.row_gen(width)
-        self.width = width
+        if game_board is None:
+            self.the_board = [self.row_gen(width) for row in range(init_height)]
+            self.height_map = self.row_gen(width)
+            self.width = width
+        else:
+            self.the_board = copy.deepcopy(game_board.the_board)
+            self.height_map = copy.deepcopy(game_board.height_map)
+            self.width = game_board.width
 
     def __repr__(self):
         map_str = '['
         for cnt, row in enumerate(self.the_board):
-            if cnt == 1:
+            if cnt == 0:
                 map_str += '{}\n'.format(row)
             elif cnt != len(self.the_board) - 1:
                 map_str += ' {}\n'.format(row)
@@ -74,17 +79,102 @@ class GameNode(object):
     We can also append the new rows by simply appending to the state list.
     """
 
-    def __init__(self):
+    def __init__(self, parent=None):
         self.state = []
-        self.parent = None
-        self.alpha
         self.alpha = 0
+        if type(parent) is GameNode:
+            self.parent = parent
+            self.node_board = GameBoard(game_board=parent.node_board)
+        else:
+            # If we're the root node, set parent to our own reference.
+            self.parent = self
+            self.node_board = GameBoard()
+
 
     def getState(self):
         return self.state
 
     def getParent():
         return self.parent
+
+def get_heuristic(the_board, symbol, row_index, column_index):
+    """ A function to find the maximum heuristic for a particular position
+    and particular players symbol at a specific location of the board.
+    Inputs:
+        the_board- A nested list of list object representing the board.
+        symbol   - The symbol whose heuristic is to be calculated.
+        row_index- The index of the list which represents the row.
+        column_index- The index of the column to check
+    """
+    if the_board[row_index][column_index] != symbol:
+        return 0
+    heuristics = []
+    heuristics.append(heuristic_horizontal(the_board, symbol, row_index, column_index))
+    heuristics.append(heuristic_vertical(the_board, symbol, row_index, column_index))
+    heuristics.append(heuristic_diagonal(the_board, symbol, row_index, column_index))
+    return max(heuristics)
+
+def heuristic_horizontal(the_board, symbol, row_index, column_index):
+    """
+    Inputs:
+        the_board- A nested list of list object representing the board.
+        symbol   - The symbol whose heuristic is to be calculated.
+        row_index- The index of the list which represents the row.
+        column_index- The index of the column to check
+    """
+    r_ind, c_ind = row_index, column_index
+    this_symbol = lambda: the_board[r_ind][c_ind] == symbol 
+    right_bound = lambda: c_ind < len(the_board[r_ind])
+    heuristic = 0
+    while(this_symbol() and right_bound()):
+        heuristic += 1
+        c_ind += 1
+    return heuristic
+
+def heuristic_vertical(the_board, symbol, row_index, column_index):
+    """
+    Inputs:
+        the_board- A nested list of list object representing the board.
+        symbol   - The symbol whose heuristic is to be calculated.
+        row_index- The index of the list which represents the row.
+        column_index- The index of the column to check
+    """
+    r_ind, c_ind = row_index, column_index
+    this_symbol = lambda: the_board[r_ind][c_ind] == symbol 
+    upper_bound = lambda: r_ind >= 0 
+    heuristic = 0
+    while(this_symbol() and upper_bound()):
+        heuristic += 1
+        r_ind -= 1
+    return heuristic
+
+def heuristic_diagonal(the_board, symbol, row_index, column_index):
+    """
+    Inputs:
+        the_board- A nested list of list object representing the board.
+        symbol   - The symbol whose heuristic is to be calculated.
+        row_index- The index of the list which represents the row.
+        column_index- The index of the column to check
+    """
+    r_ind, c_ind = row_index, column_index
+    left_heuristic, right_heuristic = 0, 0
+    this_symbol = lambda: the_board[r_ind][c_ind] == symbol 
+    right_bound = lambda: c_ind < len(the_board[r_ind])  
+    upper_bound = lambda: r_ind >= 0 
+    left_bound = lambda: c_ind >= 0 
+    # Check left diagonal.
+    while(this_symbol() and left_bound() and upper_bound()):
+        left_heuristic += 1
+        c_ind -= 1
+        r_ind -= 1
+
+    r_ind, c_ind = row_index, column_index
+    # Check right diagonal.
+    while(this_symbol() and right_bound()  and upper_bound()):
+        right_heuristic += 1
+        c_ind += 1
+        r_ind -= 1
+    return max([left_heuristic, right_heuristic])
 
 
 def win_horizontal(Node, symbol,num):
@@ -132,25 +222,24 @@ def check_diagonal(the_board,symbol):
                  return True        
     return False
 
+def terminal_test(the_board,symbol):
+    if check_diagonal(the_board,symbol) == True or win_vertical(the_board,symbol,4) == True or win_horizontal(the_board,symbol,4):
+        return True
+    return False;
 
-def print_map(the_board):
+def print_global_map(the_board):
     """
     Prints out the map like the Pollet example.
     param: a board state
     """
+    value_map = {0:' ', 1:'X', 2:'O'}
     row_str = ''
     iterations = 1
     for row in the_board:
         for el in row:
-            if(el == 1):
-                row_str += '|{}'.format('X')
-            elif(el == 2):
-                row_str += '|{}'.format('O')
-            else:
-                row_str += '| '
+            row_str += '|{}'.format(value_map[el])
             if iterations % 7 == 0:
-                row_str += '|'
-                row_str += '\n'
+                row_str += '|\n'
             iterations += 1
     row_str += bottom_row
     print empty_row
@@ -228,3 +317,4 @@ if __name__ == '__main__':
 
 G1 = GameBoard()
 print G1.__str__()
+
