@@ -1,7 +1,7 @@
 """ A python module to play a variant of the popular Connect Four game.
 - Chris Nguyen 007405892
 - Matthew Carlis 007092306
-- Shunt Balushian 
+- Shunt Balushian 007111208
 """
 import sys
 import copy
