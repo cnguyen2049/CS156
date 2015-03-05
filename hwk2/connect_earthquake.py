@@ -1,6 +1,6 @@
 """
 This module was designed to handle th ecommand line arguments for the
-Connect Earthquake assignment implementing a Hill Climbing algorithm.
+Connect Earthquake assignment implementing a Expectiminimax algorithm.
 - Chris Nguyen 007405892
 - Matthew Carlis 007092306
 - Shunt Balushian 007111208
