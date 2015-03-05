@@ -1,0 +1,10 @@
+ReadMe
+
+Homework 4
+
+PDF file contains the answers to the word problems.
+
+To run the program run connect_earthquake.py which imports the quake_connect.py which is where all the logic of the game exists including the expectminimax algorithm.
+
+Team Members:
+
